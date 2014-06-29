@@ -7,9 +7,9 @@ Personalized for Debian (tested on Ubuntu 12.04)
 Created primarily for personal use with aws api - auto deploy for load/stress testing for mtrkv3
 
 To run:
-1. move file to new server (scp might be best way)
-2. sudo chmod +x setup.sh
-3. sh setup.sh
+- move file to new server (scp might be best way)
+- sudo chmod +x setup.sh
+- sh setup.sh
 
 Script has options to install and properly setup the following:
 - Apache2
