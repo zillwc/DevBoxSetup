@@ -1,17 +1,18 @@
 #!/bin/bash
 
-##################################################################
+#####################################################################
 ##    DevBoxSetup
 ##    Zill Christian
 ##
-##    Script automates setup of a LAMP machine fresh from AWS
+##    Script automates setup of a LAMP stack for a fresh AWS instance
 ##    Personalized for Debian (tested on Ubuntu 12.04)
 ##
 ##    To run:
-##    1. move file to new server (scp might be best way)
-##    2. chmod +x setup.sh
+##    1. deploy file to new server (scp might be best way)
+##    2. sudo chmod +x setup.sh
 ##    3. sh setup.sh
-##################################################################
+#####################################################################
+
 
 
 ######## Sys Vars ##########
@@ -51,13 +52,26 @@ echo -e "DevBoxSetup $xVersion:\n\n"
 
 ############## COLLECTING DATA ###############
 
-# Collect username, passwd, and hostname
-echo -e "Setup Questions:\nUsername for new root user: "
-read xUsername
-echo -e "Password for new root user: "
-read -s xPasswd
-echo -e "Setup Questions:\nPreferred Hostname: "
-read xHostname
+# Collect Username
+if [ -z "$xUsername" ];
+then
+  echo -e "Username for new user: "
+  read xUsername
+fi
+
+# Collect Password
+if [ -z "$xPasswd" ];
+then
+  echo -e "Password for new user: "
+  read -s xPasswd
+fi
+
+# Collect Hostname
+if [ -z "$xHostname" ];
+then
+  echo -e "Preferred Hostname: "
+  read xHostname
+fi
 ##############-----------------###############
 
 
@@ -73,7 +87,7 @@ sed -e 's/$xCurrHostname/$xHostname/g' /etc/hosts
 echo "127.0.1.1  $xHostname" >> /etc/hosts
 
 # Create the new user
-useradd $xUsername -m
+useradd $xUsername -m -s /bin/bash
 
 # Assign user the given password
 echo "$xUsername:$xPasswd" | chpasswd
@@ -95,23 +109,23 @@ usermod -a -G sudo $xUsername
 # Update this machine
 echo -e "----Updating machine"
 sleep 2
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get -y update
+sudo apt-get -y upgrade
 
 # Apache2, MySQL, PHP5, XLibs
 echo -e "----Installing LAMP Core Apps"
 sleep 2
-sudo apt-get install apache2
-sudo apt-get install mysql-server libapache2-mod-auth-mysql php5-mysql
+sudo apt-get -y install apache2
+sudo apt-get -y install mysql-server libapache2-mod-auth-mysql php5-mysql
 sudo mysql_install_db
-sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt php5-curl php5-cli
+sudo apt-get -y install php5 libapache2-mod-php5 php5-mcrypt php5-curl php5-cli
 
 # Perl install
 if [ "$xPERL" = "1" ]
 then
   echo -e "----Installing Perl"
   sleep 2
-  sudo apt-get install perl
+  sudo apt-get -y install perl
 fi
 
 # Python install
@@ -119,7 +133,7 @@ if [ "$xPYTHON" = "1" ]
 then
   echo -e "----Installing Python"
   sleep 2
-  sudo apt-get install python
+  sudo apt-get -y install python
 fi
 
 # NodeJS install
@@ -127,8 +141,8 @@ if [ "$xNODEJS" = "1" ]
 then
   echo -e "----Installing and setting up Nodejs"
   sleep 2
-  sudo apt-get install nodejs
-  sudo apt-get install npm
+  sudo apt-get -y install nodejs
+  sudo apt-get -y install npm
 fi
 
 # Ruby install
@@ -136,7 +150,7 @@ if [ "$xRUBY" = "1" ]
 then
   echo -e "----Installing Ruby"
   sleep 2
-  sudo apt-get install ruby
+  sudo apt-get -y install ruby
 fi
 
 # vsFTPd install
@@ -144,7 +158,7 @@ if [ "$xVSFTPD" = "1" ]
 then
   echo -e "----Installing and setting up VSFTPD"
   sleep 2
-  sudo apt-get install vsftpd
+  sudo apt-get -y install vsftpd
   sed -i.bak -e 's/anonymous_enable=NO/anonymous_enable=YES/g' /etc/vsftpd.conf
   sed -e 's/#local_enable=YES/local_enable=YES/g' /etc/vsftpd.conf
   sed -e 's/#write_enable=YES/write_enable=YES/g' /etc/vsftpd.conf
@@ -156,7 +170,7 @@ if [ "$xNETCAT" = "1" ]
 then
   echo -e "----Installing Netcat"
   sleep 2
-  sudo apt-get install netcat
+  sudo apt-get -y install netcat
 fi
 ################# -------------------- ###################
 
@@ -191,8 +205,8 @@ sudo service ssh restart
 ############## UPDATE AGAIN ################
 echo -e "----Updating machine again"
 sleep 2
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get -y update
+sudo apt-get -y upgrade
 echo -e "\n--Script has finished installing\n"
 sleep 2
 ###############------------##################
