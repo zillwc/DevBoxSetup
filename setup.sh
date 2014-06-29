@@ -23,6 +23,41 @@ xCurrHostname="$(hostname)"
 
 
 
+################# Usage display ##################
+usage()
+{
+	clear
+	echo -e "DevBoxSetup\nQuick setup of fresh aws instances"
+	echo -e "Usage:\n\tdevboxsetup.sh [-r ]\n"
+	echo -e "OPTIONS:\n\t-r\tRemove package\n\t-l\tList all packages\n"
+	echo -e "EXAMPLES:\n\tdevboxsetup.sh\n\tDefault: installs all the packages"
+	echo -e "EXAMPLES:\n\tdevboxsetup.sh -l\n\tList all the available packages"
+	echo -e "EXAMPLES:\n\tdevboxsetup.sh -r python\n\tRemoves python from the install packages"
+}
+################---------------###################
+
+
+
+
+########### Collect Options #########
+while getopts “lr:” OPTION
+do
+     case $OPTION in
+         l)
+             xLIST=1
+             ;;
+         d)
+             xDISABLED=$OPTARG
+             ;;
+         ?)
+			usage
+			xExit=1
+             ;;
+     esac
+done
+##########----------------###########
+
+
 
 ############### PERSONALIZATION #################
 
@@ -69,7 +104,7 @@ fi
 # Collect Hostname
 if [ -z "$xHostname" ];
 then
-  echo -e "Preferred Hostname: "
+  echo -e "\nPreferred Hostname: "
   read xHostname
 fi
 ##############-----------------###############
@@ -207,6 +242,8 @@ echo -e "----Updating machine again"
 sleep 2
 sudo apt-get -y update
 sudo apt-get -y upgrade
-echo -e "\n--Script has finished installing\n"
+echo -e "\n--Script has finished installing/setting up all packages\n"
 sleep 2
 ###############------------##################
+
+exit 0
