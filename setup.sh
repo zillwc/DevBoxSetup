@@ -73,24 +73,20 @@ echo "$xUsername ALL=(ALL:ALL) ALL" >> /etc/sudoers
 usermod -a -G root $xUsername
 usermod -a -G sudo $xUsername
 
+
+
+
+
 # Update this machine
 sudo apt-get update
 sudo apt-get upgrade
 
-
-# Apache2, MySQL, PHP5
+# Apache2, MySQL, PHP5, connectors
 if [ "$xLAMP" -ne "1" ]
+then
   sudo apt-get install apache2
   sudo apt-get install mysql-server libapache2-mod-auth-mysql php5-mysql
-then
-
-if [ "$xAPACHE" -ne "1" ]
-
-then
-
-
-
-
+fi
 
 sudo apt-get install mysql-server php5-mysql
 sudo mysql_install_db
