@@ -22,6 +22,20 @@ xCurrHostname="$(hostname)"
 ########----------##########
 
 
+############### PERSONALIZATION #################
+xHostname=
+xUsername=
+xPasswd=
+xDisablePubKeyAuth=1
+
+xPERL=1
+xPYTHON=1
+xNODEJS=1
+xRUBY=1
+xVSFTPD=1
+xNETCAT=1
+################--------------####################
+
 
 ################# Usage display ##################
 usage()
@@ -37,12 +51,14 @@ usage()
 ################---------------###################
 
 
-
-
 ########### Collect Options #########
-while getopts “lr:” OPTION
+while getopts “hlr:” OPTION
 do
      case $OPTION in
+         h)
+             usage
+             exit 1
+             ;;
          l)
              xLIST=1
              ;;
@@ -58,35 +74,13 @@ done
 ##########----------------###########
 
 
-
-############### PERSONALIZATION #################
-
-xHostname=
-xUsername=
-xPasswd=
-xDisablePubKeyAuth=1
-
-xPERL=1
-xPYTHON=1
-xNODEJS=1
-xRUBY=1
-xVSFTPD=1
-xNETCAT=1
-################--------------####################
-
-
-
-
-################### INIT #####################
+############## INIT Version ##################
 # Init
 echo -e "DevBoxSetup $xVersion:\n\n"
-##############-----------------###############
-
-
+##############--------------##################
 
 
 ############## COLLECTING DATA ###############
-
 # Collect Username
 if [ -z "$xUsername" ];
 then
@@ -110,10 +104,7 @@ fi
 ##############-----------------###############
 
 
-
-
 ################### SETTING UP USER #####################
-
 # Change the hostname
 echo -e "Adding "
 hostname $xHostname
@@ -137,10 +128,7 @@ usermod -a -G sudo $xUsername
 ##############-----------------###############
 
 
-
-
 ########## INSTALLING PACKAGES #############
-
 # Update this machine
 echo -e "----Updating machine"
 sleep 2
@@ -210,9 +198,6 @@ fi
 ################# -------------------- ###################
 
 
-
-
-
 ########## DISABLE PUB KEY AUTH #############
 if [ "$xDisablePubKeyAuth" = "1" ]
 then
@@ -224,17 +209,12 @@ fi
 ###############------------##################
 
 
-
-
-
 ############ RESTART SERVICES ###############
 echo -e "----Restarting all services"
 sudo service apache2 restart
 sudo service vsftpd restart
 sudo service ssh restart
 ###############------------##################
-
-
 
 
 ############## UPDATE AGAIN ################
